@@ -1,19 +1,35 @@
 # INF-8239 Ciencia de Datos II — Unidad 01
 
-Autora: Kimberly Pereyra
+**Autora:** Kimberly Pereyra
 
-## Sistema operativo y versiones
-- Windows 11 (10.0.26300)
-- Python 3.11.9
-- Git 2.56.0
+## Ejercicio 01 · Deserción estudiantil con SVM reproducible
 
-## Estructura del proyecto
+- **Pregunta:** ¿Es posible identificar al final del 1er semestre qué estudiantes abandonarán, seguirán matriculados o se graduarán?
+- **Dataset:** *Predict Students' Dropout and Academic Success* — UCI ML Repository, id 697. Realinho, V. et al. (2021). DOI 10.24432/C5MC89. Licencia CC BY 4.0.
+- **Unidad de análisis:** un estudiante (4,424 filas).
+- **Target:** `Target` (Dropout, Enrolled, Graduate).
+- **Métrica principal:** F1 macro; se vigila el recall de Dropout.
+- **Prevención de fuga:** se excluyen las 6 variables `Curricular units 2nd sem (...)` porque no están disponibles al final del 1er semestre.
+
+### Resultados (conjunto de prueba, 20 %)
+
+| Modelo | F1 macro | Recall Dropout |
+|---|---|---|
+| Dummy (most_frequent) | 0.2221 | 0.0000 |
+| SVM base (C=1, gamma=scale) | 0.6321 | 0.6831 |
+| SVM ajustada (C=10, gamma=0.01, balanced) | **0.6677** | 0.6655 |
+
+## Entorno
+- Windows 11 (10.0.26300), Python 3.11.9, Git 2.56.0, scikit-learn 1.9.1
+
+## Estructura
 ```
-data/        datasets (data/raw no se versiona)
-notebooks/   notebooks de Jupyter
-reports/     figuras y resultados
-src/         código reutilizable (paquete inf8239_u01)
-tests/       pruebas unitarias
+data/raw/    dataset descargado (no se versiona)
+docs/        ficha y comparación de datasets
+notebooks/   00 verificación · 01 SVM guiada · 02 deserción SVM (Ejercicio 01)
+reports/     CSV de resultados, matrices de confusión y modelos
+src/         paquete inf8239_u01 (data.py, models.py)
+tests/       pruebas unitarias y contrato de datos
 ```
 
 ## Instalación (Windows, cmd)
@@ -26,13 +42,21 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Ejecutar pruebas
+## Descarga reproducible del dataset
+```
+set PYTHONPATH=src
+python -c "from inf8239_u01.data import download_csv; print(download_csv())"
+```
+Descarga el ZIP oficial de UCI y lo guarda en `data/raw/dataset.csv`. El notebook también lo descarga automáticamente si no existe.
+
+## Ejecución
+1. Abrir `notebooks/02_desercion_svm.ipynb`, seleccionar el kernel `.venv` y usar **Run All**.
+2. Pruebas:
 ```
 set PYTHONPATH=src
 python -m pytest -q
 ```
-Resultado esperado: `1 passed`.
+Resultado esperado: `8 passed`.
 
-## Verificar Jupyter
-Abrir `notebooks/00_verificacion.ipynb`, seleccionar el kernel `.venv` y ejecutar.
-La ruta del intérprete debe contener `.venv`.
+## Nota de entorno
+Con scikit-learn 1.9 aparece un `FutureWarning`

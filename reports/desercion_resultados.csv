@@ -1,0 +1,4 @@
+modelo,f1_macro,recall_dropout
+Dummy (most_frequent),0.2221,0.0
+"SVM base (C=1, gamma=scale)",0.6321,0.6831
+"SVM ajustada (C=10, gamma=0.01, balanced)",0.6677,0.6655
